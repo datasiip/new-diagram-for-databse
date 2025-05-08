@@ -1,0 +1,506 @@
+// Tabla de Empresas
+table empresas {
+    id int [pk, increment]
+    nombre varchar(255)
+    tipo_documento int
+    tipo_documento_nombre varchar(255)
+    id_pais int [ref: > pais.id] // Relación con tabla de ubicación de países
+    documento varchar(255)
+    id_responsable int [ref: > empresas_responsables.id] // Relación con responsable
+    sucursales int [default: 0]
+    region varchar(50)
+    zonas int
+    zona_horaria varchar(255)
+    activo boolean [default: true]
+    id_moneda int [ref: > moneda.id] // Relación con la tabla de configuración de moneda
+    id_erp int [default: 0]
+    id_empresa_erp int
+    ccos_obligatorio boolean [default: false]
+    vencimiento_cotizacion int [default: 8]
+    grupo_empresarial int [default: 1]
+    id_subdireccion int
+    subdireccion varchar(255)
+    id_dir_comercial int
+    dir_comercial varchar(255)
+    id_dir_operativo int
+    dir_operativo varchar(255)
+    id_dir_financiero int
+    dir_financiero varchar(255)
+    id_dir_compras int
+    dir_compras varchar(255)
+    id_dir_inventario int
+    dir_inventario varchar(255)
+    correo_compras varchar(255)
+    id_moneda_compras int
+    simbolo_moneda_compras varchar(20)
+    moneda_compras_letras varchar(255)
+    id_dir_mantenimiento int
+    dir_mantenimiento varchar(255)
+    nit_alfanumerico boolean [default: false]
+    direccion_principal varchar(255)
+    telefono_principal varchar(50)
+    reunion_operativa_global boolean [default: false]
+    iva_discriminado_cotizaciones boolean [default: true]
+    validacion_funcionarios_proveedores boolean [default: true]
+    dominio_email varchar(25)
+}
+
+// Tabla de Países (con relación de ubicación)
+//relacion de nombre cambia de ubicacion_pais a pais
+table pais {
+  id int [pk, increment]
+  nombre varchar(255)
+  continente varchar(255)
+  subcontinente varchar(255)
+  prefijo int
+  iso2 varchar(2)
+  iso3 varchar(3)
+  time_zone varchar(255) [default: 'America/Bogota']
+  impuesto varchar(255)
+  id_moneda int [ref: > moneda.id]
+}
+// Tabla de  de Moneda
+// se cambia configuracion_moneda por moneda
+//se propone haber todos  los paises inactivos con cioertos datos vacios para que las divisas se manejen aca 
+table moneda {
+    id int [pk, increment]
+    moneda varchar(255) 
+    descripcion varchar(255)
+    nombre_en_letras varchar(255)
+    simbolo varchar(255)
+    decimales int [default: 2]
+    label varchar(255)
+    formato_hora int [default: 1] // 1 -> AM/PM, 2 -> 24h
+    idioma varchar(255) 
+    predeterminado boolean [default: false]
+}
+
+// Tabla de Responsables de Empresas
+table empresas_responsables {
+    id int [pk, increment]
+    nombre varchar(255)
+    cargo varchar(255)
+    email varchar(255)
+    telefono varchar(50)
+}
+
+// Tabla de Configuración de Empresa
+table empresas_configuracion {
+    id int [pk, increment]
+    id_empresa int [ref: > empresas.id]
+    ccos_obligatorio boolean [default: false]
+    reunion_operativa_global boolean [default: false]
+    iva_discriminado_cotizaciones boolean [default: true]
+    validacion_funcionarios_proveedores boolean [default: true]
+}
+
+// Tabla de Sucursales
+table empresas_sucursales {
+    id int [pk, increment]
+    id_empresa int [ref: > empresas.id]
+    nombre varchar(255)
+    id_responsable int
+    responsable varchar(255)
+    bodegas int [default: 0]
+    activo boolean [default: true]
+    saiopen_sucursal varchar(4)
+    saiopen_remision varchar(10)
+    saiopen_departamento int
+    saiopen_ciudad int
+    id_erp int [default: 0]
+    zona int
+    zona_nombre varchar(255)
+    reunion_operativa boolean [default: true]
+}
+
+// Tabla de empleados_datos_basicos
+table empleados_datos_basicos {
+    id int [pk, increment]
+    tipo_documento int
+    tipo_documento_nombre varchar(255)
+    documento varchar(255)
+    nombre1 varchar(255)
+    nombre2 varchar(255)
+    apellido1 varchar(255)
+    apellido2 varchar(255)
+    nombre varchar(255)
+    id_empresa int [ref: > empresas.id]
+    empresa varchar(255)
+    id_zona int
+    zona varchar(255)
+    id_sucursal int [ref: > empresas_sucursales.id]
+    sucursal varchar(255)
+    id_unidad_negocio int
+    unidad_negocio varchar(255)
+    id_pais int [ref: > pais.id] // Relación con la tabla de países
+    id_departamento int
+    id_ciudad int
+    id_rol int
+    rol varchar(255)
+    id_cargo int
+    cargo varchar(255)
+}
+
+// Tabla de empleados_contacto
+table empleados_contacto {
+    id int [pk, increment]
+    id_empleado int [ref: > empleados_datos_basicos.id]
+    email_empresa varchar(255)
+    email_personal varchar(255)
+    direccion varchar(255)
+    telefono1 varchar(255)
+    telefono2 varchar(255)
+    celular1 varchar(255)
+    id_celular_empresa int
+    celular_empresa varchar(255)
+    ciudad_cedula varchar(255)
+    eps varchar(255)
+    arp varchar(255)
+    qrcode mediumblob
+    color_menu varchar(11) [default: '0,0,0']
+    tipo_fondo varchar(20) [default: 'color_fondo']
+    color_fondo varchar(11) [default: '32,124,229']
+    imagen_fondo varchar(15)
+}
+
+// Tabla de empleados_laborales
+table empleados_laborales {
+    id int [pk, increment]
+    id_empleado int [ref: > empleados_datos_basicos.id]
+    username varchar(255)
+    password varchar(255)
+    password_hash varchar(255)
+    salario_base float [default: 566700.00]
+    salario float [default: 0.00]
+    id_contrato int
+    contrato varchar(255)
+    ad_contrato blob
+    ad_certificado_judicial blob
+    ad_cedula blob
+    ad_certificado_estudios blob
+    ad_hoja_vida blob
+    ad_afiliaciones blob
+    alerta_actualizacion boolean [default: false]
+    activo boolean [default: true]
+    estudio_actual varchar(255)
+    id_android_device varchar(255)
+    tipo_contrato int
+    fecha_modificacion datetime
+    firma varchar(5000)
+    movil_sinc_contactos int [default: 0]
+    id_celular varchar(255)
+    validar_celular boolean
+    valida_hora_ingreso boolean [default: true]
+    residente boolean [default: false]
+    huella_template blob
+    huella_foto blob
+    huella_enrola boolean [default: false]
+    enturnable boolean [default: false]
+    dependencia int
+    turno_administrativo boolean [default: false]
+    id_turno_administrativo int
+    legajo int
+    id_nivel_estudio int
+    nombre_estudio varchar(255)
+    estudia_actualmente boolean [default: false]
+}
+
+// Tabla de empleados_documentos
+table empleados_documentos {
+    id int [pk, increment]
+    id_empleado int [ref: > empleados_datos_basicos.id]
+    ad_contrato blob
+    ad_certificado_judicial blob
+    ad_cedula blob
+    ad_certificado_estudios blob
+    ad_hoja_vida blob
+    ad_afiliaciones blob
+}
+
+// Tabla de Tipo de Documento
+table tipo_documento {
+    id int [pk, increment]
+    nombre varchar(255)
+    detalle varchar(255)
+    tipo varchar(255)
+    activo int [default: 1]
+    codigo_documento int(5)
+    id_pais int [ref: > pais.id] // Relación con la tabla de países
+}
+
+// Tabla de Zonas Comerciales de Terceros
+table terceros_zona_comercial {
+    id int [pk, increment]
+    nombre varchar(255)
+    id_pais int [ref: > pais.id] // Relación con la tabla de países
+    minimo_calificacion double(11, 2)
+}
+
+// Tabla de Terceros Tributarios
+table terceros_tributario {
+    id int [pk, increment]
+    nombre varchar(255)
+    id_pais int [ref: > pais.id] // Relación con la tabla de países
+    activo int [default: 1]
+}
+
+// Tabla de Direcciones de Terceros
+table terceros_direcciones {
+    id int [pk, increment]
+    id_tercero int [ref: > terceros.id]
+    direccion varchar(255)
+    id_departamento int [ref: > ubicacion_departamento.id]
+    departamento varchar(255)
+    id_ciudad int [ref: > ubicacion_ciudad.id]
+    ciudad varchar(255)
+    activo int(2) [default: 1]
+    telefono1 varchar(25)
+    telefono2 varchar(25)
+    celular1 varchar(25)
+    celular2 varchar(25)
+    nombre varchar(255)
+    direccion_principal bool(1) [default: 0] //se paso a boleano 
+    encuesta varchar(5) [default: 'false']
+    encuesta_destinatario varchar(255)
+    encuesta_email varchar(255)
+    encuesta_telefono varchar(255)
+    encuesta_celular varchar(255)
+    id_tipo_cliente_comercial tinyint(2) [default: 1]
+    tipo_cliente_comercial varchar(255)
+    zona_comercial int(255)
+    id_pais int [ref: > pais.id] // Relación con la tabla de países
+
+    emails int(4)
+    id_bodega_siip int(11)
+    bodega_siip varchar(255)
+    tipo_bodega varchar(255)
+    contactos int(4)
+  tipo_operacion tinyint(2) [default: 0, note: '''
+    0 -> No Aplica
+    1 -> Por Contrato
+    2 -> Por Demanda
+  ''']
+  
+  envio_formato_ac varchar(5) [default: 'true', note: 'Formato de adiciones y cancelaciones']
+
+
+}
+
+// Tabla de Terceros
+table terceros {
+    id int [pk, increment]
+    id_tipo_identificacion int(11)
+    tipo_identificacion varchar(255)
+    dv varchar(255)
+    tipo varchar(255)
+    id_tipo_cliente_comercial tinyint(4) [default: 1]
+    tipo_cliente_comercial varchar(255)
+    id_linea_negocio int(11)
+    ciudad_identificacion varchar(255)
+    numero_identificacion varchar(255) [not null]
+    nombre varchar(255)
+    nombre_comercial varchar(255)
+    cadena_hotelera varchar(250)
+    cliente_activo bool(1) //era un int pero debe ser un booleano 
+    cliente_activo_ varchar(2)
+    fechaInicioContrato date
+    fechaFinalContrato date
+    direccion varchar(255)
+    telefono1 varchar(25)
+    telefono2 varchar(25)
+    celular1 varchar(25)
+    celular2 varchar(25)
+    email varchar(255)
+    fax varchar(255)
+    id_pais int [ref: > pais.id] // Relación con la tabla de países
+    pais varchar(255)
+    iso2 varchar(3)
+    id_departamento int(11) [ref: > ubicacion_departamento.id]
+    departamento varchar(255)
+    id_ciudad int(11) [ref: > ubicacion_ciudad.id]
+    ciudad varchar(255)
+    web varchar(255)
+    direcciones int(11)
+    contactos int(11)
+    nombre_establecimiento varchar(255)
+    representante_legal varchar(255)
+    id_tipo_identificacion_representante int(11)
+    tipo_identificacion_representante varchar(255)
+    identificacion_representante varchar(255)
+    ciudad_id_representante varchar(255)
+    ciudad_representante varchar(255)
+    numero_matricula_camara varchar(255)
+    libro_camara varchar(255)
+    fecha_matricula_camara varchar(255)
+    ciudad_camara varchar(255)
+    numero_escritura varchar(255)
+    fecha_escritura varchar(255)
+    notaria_escritura varchar(255)
+    ciudad_notaria varchar(255)
+    fecha_creacion date
+    id_sector_empresarial int(11)
+    sector_empresarial varchar(255)
+    pagina_web varchar(255)
+    id_configuracion_origen int(11)
+    configuracion_origen varchar(255)
+    UserIdLog int(11)
+    id_tercero_tributario int(11)
+    id_tipo_persona_dian tinyint(1)
+    id_forma_pago int(11)
+    id_metodo_pago int(11)
+    exento_iva varchar(10)
+    gravable varchar(10)
+    retener_ica varchar(10)
+    retener_iva varchar(10)
+    agente_retenedor varchar(10)
+    clasificacion varchar(1) [default: 'D']
+    id_proyecto int(11)
+    proyecto varchar(255)
+    id_actividad int(11)
+    actividad varchar(255) [not null]
+    tipo_cliente varchar(2)
+    tipo_proveedor varchar(2)
+    asisteH int(11) [default: 0]
+    asisteH_ varchar(2) [default: 'NO']
+    asisteS int(11) [default: 0]
+    asisteS_ varchar(2) [default: 'NO']
+    survey int(1)
+    survey_ varchar(2)
+    hotels int(1)
+    hotels_ varchar(2)
+    contler int(1)
+    contler_ varchar(2)
+    erp_facse int(1)
+    erp_facse_ varchar(2)
+    hunty int(1)
+    hunty_ varchar(2)
+    otros int(1)
+    otro_soft varchar(250)
+    encuesta varchar(5) [default: 'false']
+    encuesta_destinatario varchar(255)
+    encuesta_email varchar(255)
+    encuesta_celular varchar(255)
+    encuesta_telefono varchar(255)
+    zona_comercial int(11)
+    nombre_zona_comercial varchar(255)
+    sinc_erp varchar(255) [default: 'false']
+    nombre1 varchar(255)
+    nombre2 varchar(255)
+    apellido1 varchar(255)
+    apellido2 varchar(255)
+    tercero int(11) [not null,default: '1']
+    activo int(11) [default: 1]
+    ficha_tecnica varchar(10) [default: 'false']
+    tarifario varchar(10) [default: 'false']
+    usuario_log int(11)
+    estado_proveedor bit(1) [default: 1] // Asumiendo que '1' es TRUE
+    prioridad_prospecto varchar(5)
+    proveedor_subcontratacion varchar(5) [default: 'No']
+    correo_subcontratacion varchar(255)
+    id_origen_contacto int(11)
+    origen_contacto varchar(255)
+    descripcion_contacto varchar(255)
+    tipo_operacion tinyint(4) [default: 0]
+    observacion_servicios varchar(255)
+    nombre_contacto varchar(255)
+    inhabilitado varchar(5) [default: 'false']
+    departamento_gestion int(11)
+    facturacion_frecuencia int(11)
+    facturacion_provision int(11)
+    facturacion_provision_detalle varchar(255)
+    facturacion_dias int(11)
+    facturacion_dia_cierre int(11)
+    facturacion_observaciones text
+    zip varchar(50)
+}
+
+
+// Tabla de Ubicación de Departamentos
+table ubicacion_departamento {
+    id int [pk, increment]
+    departamento varchar(255)
+    id_pais int [ref: > pais.id] // Relación con la tabla de países
+    pais varchar(255)
+    activo bool(1) [default: 1]
+}
+
+// Tabla de Ubicación de Ciudades
+table ubicacion_ciudad {
+    id int [pk, increment]
+    ciudad varchar(255)
+    id_pais int [ref: > pais.id] // Relación con la tabla de países
+    pais varchar(255)
+    id_departamento int [ref: > ubicacion_departamento.id] // Relación con la tabla de departamentos
+    departamento varchar(255)
+    activo int(1) [default: 1]
+}
+
+
+Ref: "empresas"."iva_discriminado_cotizaciones" < "empresas_configuracion"."ccos_obligatorio"
+
+  // Tabla de Pedido Novedades Eventos
+table pedido_novedades_eventos {
+    id int [pk, increment]
+    id_pedido varchar(50)
+    consecutivo int
+    consecutivo_completo varchar(20)
+    observacion longtext
+    id_usuario int
+    id_pais int [ref: > pais.id] // Relación con la tabla de países
+    nombre_usuario varchar(255)
+    estado int(1) [default: 0] // 0->abierta, 1->cerrado
+    pqrs varchar(5) [default: 'false']
+    obs_finalizacion varchar(255)
+    fecha_finalizacion datetime
+    usuario_finalizacion int
+    fecha_novedad datetime
+    activo  bit(1) [default: 1] 
+}
+
+// Tabla de Documentos Excel Comisiones
+table documentos_excel_comisiones {
+    id int [pk, increment]
+    nombre_formato varchar(255)
+    id_pais int [ref: > pais.id] // Relación con la tabla de países
+    ext varchar(5)
+    randomico varchar(50)
+    inicio_vigencia date
+    fin_vigencia date
+}
+// Tabla de Configuración de Horas Extras
+table configuracion_horas_extras {
+    id int [pk, increment]
+    id_pais int [ref: > pais.id] // Relación con la tabla de países
+    pais varchar(11)
+    ano int(4)
+    hed float(11, 2)
+    hen float(11, 2)
+    hedf float(11, 2)
+    henf float(11, 2)
+    salario_base float(11, 2)
+    inicia_diurno time [default: '06:00:00']
+    inicia_nocturno time [default: '22:00:00']
+    activo int(11) [default: '1']
+}
+
+// Tabla de tipos de documentos de configuración
+table configuracion_documentos_tipo {
+  id int [pk, increment]
+  nombre varchar(255)
+  activo tinyint(1) [default: 1]
+  tabla_principal varchar(255)
+}
+
+// Tabla de documentos de configuración
+table configuracion_documentos {
+  id int [pk, increment]
+  nombre varchar(255)
+                                                                                                          id_tipo int [ref: > configuracion_documentos_tipo.id]
+  //se elimina tipo ya que lo trae id_tipo 
+  texto longblob
+  texto2 longblob
+  id_empresa int [ref: > empresas.id]
+  //se elimina empresa ya que el id_empresa 
+  id_sucursal int [ref: > empresas_sucursales.id]
+  //se elimina sucursal ya que se extrae de id_sucursal
+}
