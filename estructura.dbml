@@ -485,7 +485,7 @@ table configuracion_horas_extras {
 
 // Tabla de tipos de documentos de configuración
 table configuracion_documentos_tipo {
-  id int [pk, increment]
+  id int [pk, increment]//lool
   nombre varchar(255)
   activo tinyint(1) [default: 1]
   tabla_principal varchar(255)
