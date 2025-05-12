@@ -252,7 +252,7 @@ table terceros_direcciones {
     id_departamento int [ref: > ubicacion_departamento.id]
     departamento varchar(255)
     id_ciudad int [ref: > ubicacion_ciudad.id]
-    ciudad varchar(255)
+    //la ciudad se referencia de id ciudad 
     activo int(2) [default: 1]
     telefono1 varchar(25)
     telefono2 varchar(25)
@@ -316,9 +316,9 @@ table terceros {
     pais varchar(255)
     iso2 varchar(3)
     id_departamento int(11) [ref: > ubicacion_departamento.id]
-    departamento varchar(255)
+    //el departamento se referencia del id departamento 
     id_ciudad int(11) [ref: > ubicacion_ciudad.id]
-    ciudad varchar(255)
+    //la ciudad se referencia de id ciudad 
     web varchar(255)
     direcciones int(11)
     contactos int(11)
@@ -429,7 +429,7 @@ table ubicacion_ciudad {
     id int [pk, increment]
     ciudad varchar(255)
     id_pais int [ref: > pais.id] // Relación con la tabla de países
-    pais varchar(255)
+   //el pais se referencia de id pais 
     id_departamento int [ref: > ubicacion_departamento.id] // Relación con la tabla de departamentos
     departamento varchar(255)
     activo int(1) [default: 1]
