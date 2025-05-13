@@ -45,6 +45,15 @@ table empresas {
     dominio_email varchar(25)
 }
 
+
+table tipos_identificacion {
+  id int [pk, increment]
+  codigo varchar(10) [unique]  // Ejemplo: 'CC', 'NIT', 'TI', 'CE', 'NUIP'
+  descripcion varchar(255)      // Ejemplo: 'Cédula de Ciudadanía', 'NIT', 'Tarjeta de Identidad', 'Cédula de Extranjería', 'Pasaporte'
+  pais varchar(100)            // Ejemplo: 'Colombia', 'Perú', 'España'
+}
+
+
 // Tabla de Países (con relación de ubicación)
 //relacion de nombre cambia de ubicacion_pais a pais
 table pais {
@@ -287,6 +296,8 @@ table terceros_direcciones {
 }
 
 // Tabla de Terceros
+//  fechas son nuevas, muy buena practica  aunque ya hay otros campos de creacion fecha lo que seria interesante analizar si es diferente
+//ocr en el software que extraiga todos esos cammpos
 table terceros {
     id int [pk, increment]
     id_tipo_identificacion int(11)
