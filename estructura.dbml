@@ -45,6 +45,15 @@ table empresas {
     dominio_email varchar(25)
 }
 
+
+table tipos_identificacion {
+  id int [pk, increment]
+  codigo varchar(10) [unique]  // Ejemplo: 'CC', 'NIT', 'TI', 'CE', 'NUIP'
+  descripcion varchar(255)      // Ejemplo: 'Cédula de Ciudadanía', 'NIT', 'Tarjeta de Identidad', 'Cédula de Extranjería', 'Pasaporte'
+  pais varchar(100)            // Ejemplo: 'Colombia', 'Perú', 'España'
+}
+
+
 // Tabla de Países (con relación de ubicación)
 //relacion de nombre cambia de ubicacion_pais a pais
 table pais {
@@ -116,8 +125,8 @@ table empresas_sucursales {
 // Tabla de empleados_datos_basicos
 table empleados_datos_basicos {
     id int [pk, increment]
-    tipo_documento int
-    tipo_documento_nombre varchar(255)
+    id_tipo_identificacion int [ref: > tipos_identificacion.id]//tipo_documento se remplaza ya que estaba funcionando como id para relaccionarla con la tabla de hecho encargada
+    //tipo de documentos e extrae de id_tipo_identificacion
     documento varchar(255)
     nombre1 varchar(255)
     nombre2 varchar(255)
@@ -287,12 +296,14 @@ table terceros_direcciones {
 }
 
 // Tabla de Terceros
+//  fechas son nuevas, muy buena practica  aunque ya hay otros campos de creacion fecha lo que seria interesante analizar si es diferente
+//ocr en el software que extraiga todos esos cammpos
 table terceros {
     id int [pk, increment]
-    id_tipo_identificacion int(11)
-    tipo_identificacion varchar(255)
+     id_tipo_identificacion int [ref: > tipos_identificacion.id]
+    //tipo_identificacion se borra ya que se rescata del id tipo_identificacion
     dv varchar(255)
-    tipo varchar(255)
+    //tipo se borra ya que se rescata del id tipo_identificacion
     id_tipo_cliente_comercial tinyint(4) [default: 1]
     tipo_cliente_comercial varchar(255)
     id_linea_negocio int(11)
@@ -324,8 +335,8 @@ table terceros {
     contactos int(11)
     nombre_establecimiento varchar(255)
     representante_legal varchar(255)
-    id_tipo_identificacion_representante int(11)
-    tipo_identificacion_representante varchar(255)
+     id_tipo_identificacion_representante int [ref: > tipos_identificacion.id]
+    //se extrae del id informacion para tipo_identificacion_representante
     identificacion_representante varchar(255)
     ciudad_id_representante varchar(255)
     ciudad_representante varchar(255)
@@ -358,8 +369,8 @@ table terceros {
     proyecto varchar(255)
     id_actividad int(11)
     actividad varchar(255) [not null]
-    tipo_cliente varchar(2)
-    tipo_proveedor varchar(2)
+    tipo_cliente varchar(2) // es un si o un no que radica en si es cliente 
+    tipo_proveedor varchar(2)// es un si que radica si es proveedor 
     asisteH int(11) [default: 0]
     asisteH_ varchar(2) [default: 'NO']
     asisteS int(11) [default: 0]
