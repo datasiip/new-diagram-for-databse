@@ -237,6 +237,109 @@ table tipo_documento {
     id_pais int [ref: > pais.id] // Relación con la tabla de países
 }
 
+table terceros_asignados {
+  id int [pk, increment]
+  id_empresa int [ref: > empresas.id]
+  id_tercero int [ref: > terceros.id]
+  id_asignado int [ref: > empleados_datos_basicos.id]
+  asignado varchar(255)
+}
+
+table terceros_bloqueos_log {
+  id int [pk, increment]
+  id_tercero int [ref: > terceros.id]
+  accion varchar(50)
+  concepto varchar(50)
+  observacion varchar(255)
+  id_usuario int [ref: > empleados_datos_basicos.id]
+  fecha datetime
+}
+
+table terceros_contactos {
+  id int [pk, increment]
+  id_tercero int [ref: > terceros.id]
+  id_tipo_identificacion int [ref: > tipos_identificacion.id]
+  nombre varchar(255)
+  cargo varchar(255)
+  telefono1 varchar(25)
+  telefono2 varchar(25)
+  celular1 varchar(25)
+  celular2 varchar(25)
+  email varchar(255)
+  activo boolean [default: true]
+}
+
+table terceros_contactos_email {
+  id int [pk, increment]
+  id_contacto int [ref: > terceros_contactos.id]
+  email varchar(255)
+  activo boolean [default: true]
+}
+
+
+table terceros_ficha_tecnica {
+  id int [pk, increment]
+  id_tercero int [ref: > terceros.id]
+  gran_contribuyente varchar(5)
+  responsable_iva varchar(5)
+  autoretenedor varchar(5)
+  responsable_ica varchar(5)
+  cod_actividad_economica varchar(255)
+  cod_ciiu varchar(255)
+  tarifa_por_mil double(20,2)
+  pago_orden varchar(55)
+  numero_cuenta varchar(55)
+  tipo_cuenta varchar(20)
+  entidad varchar(55)
+  contacto_pago varchar(255)
+  tipo_proveedor varchar(55)
+  forma_pago varchar(20)
+  desc_pronto_pago varchar(5)
+  porc_desc_pronto_pago double(20,2)
+  observaciones varchar(255)
+  nombre_contacto_cartera varchar(255)
+  telefono_contacto_cartera varchar(25)
+  extension_contacto_cartera varchar(25)
+  email_contacto_cartera varchar(55)
+  activo boolean [default: true]
+}
+table terceros_hotel {
+  id int [pk, increment]
+  id_tercero int [ref: > terceros.id]
+  lugar_evento varchar(250)
+  mes_evento varchar(250)
+  porcentaje_h int(10)
+  porcentaje_p int(10)
+  ejecutivo varchar(250)
+  fecha date
+  salon varchar(250)
+  nombre_evento varchar(250)
+  nombre_tercero varchar(250)
+  servicios_tercero varchar(600)
+  valor_cobrar int(20)
+  valor_hotel int(20)
+  valor_plataforma int(20)
+}
+
+table terceros_tipo_documento_confidencial {
+  id int [pk, increment]
+  nombre varchar(255)
+  activo boolean [default: true]
+}
+table terceros_tratamiento {
+  id int [pk, increment]
+  nombre varchar(255)
+  activo boolean [default: true]
+}
+
+
+table terceros_direcciones_email {
+  id int [pk, increment]
+  id_direccion int [ref: > terceros_direcciones.id]
+  email varchar(255)
+  activo boolean [default: true]
+}
+
 // Tabla de Zonas Comerciales de Terceros
 table terceros_zona_comercial {
     id int [pk, increment]
@@ -293,6 +396,13 @@ table terceros_direcciones {
   envio_formato_ac varchar(5) [default: 'true', note: 'Formato de adiciones y cancelaciones']
 
 
+}table contactos_telefonos {
+    id int [pk, increment]
+    tercero_id int [ref: > terceros.id]
+    tipo_telefono enum('fijo', 'celular', 'fax')
+    numero varchar(25)
+    es_principal boolean
+    descripcion varchar(100)
 }
 
 // Tabla de Terceros
@@ -317,12 +427,8 @@ table terceros {
     fechaInicioContrato date
     fechaFinalContrato date
     direccion varchar(255)
-    telefono1 varchar(25)
-    telefono2 varchar(25)
-    celular1 varchar(25)
-    celular2 varchar(25)
+    //se borraron el fax, los 2 telefonos y los 2 celulares porque los va a menajar la tabla contactos 
     email varchar(255)
-    fax varchar(255)
     id_pais int [ref: > pais.id] // Relación con la tabla de países
     pais varchar(255)
     iso2 varchar(3)
@@ -515,3 +621,5 @@ table configuracion_documentos {
   id_sucursal int [ref: > empresas_sucursales.id]
   //se elimina sucursal ya que se extrae de id_sucursal
 }
+
+Ref: "pais"."prefijo" < "pais"."iso2"
