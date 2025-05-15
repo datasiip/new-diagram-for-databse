@@ -256,17 +256,30 @@ table terceros_bloqueos_log {
 }
 
 table terceros_contactos {
-  id int [pk, increment]
-  id_tercero int [ref: > terceros.id]
-  id_tipo_identificacion int [ref: > tipos_identificacion.id]
-  nombre varchar(255)
-  cargo varchar(255)
-  telefono1 varchar(25)
-  telefono2 varchar(25)
-  celular1 varchar(25)
-  celular2 varchar(25)
-  email varchar(255)
-  activo boolean [default: true]
+  id int [pk, increment]  // Identificador único de cada contacto
+  id_tercero int [ref: > terceros.id]  // Relación con la tabla `terceros`
+  id_tipo_identificacion int [ref: > tipos_identificacion.id]  // Relación con la tabla `tipos_identificacion`
+  tipo_identificacion varchar(255)  // Tipo de identificación (se puede extraer de `id_tipo_identificacion`)
+  identificacion varchar(255) [not null]  // Número de identificación del contacto
+  id_tratamiento int [ref: > terceros_tratamiento.id]  // Relación con la tabla de tratamientos
+  tratamiento varchar(255)  // Descripción del tratamiento del contacto
+  nombre varchar(255)  // Nombre del contacto
+  cargo varchar(255)  // Cargo del contacto
+  direccion varchar(255)  // Dirección física del contacto
+  telefono1 varchar(25)  // Teléfono principal del contacto
+  telefono2 varchar(25)  // Teléfono secundario del contacto
+  celular1 varchar(25)  // Número de celular principal
+  celular2 varchar(25)  // Número de celular secundario
+  nacimiento varchar(255)  // Fecha de nacimiento del contacto
+  observaciones blob  // Observaciones generales sobre el contacto
+  sexo varchar(255)  // Sexo del contacto
+  emails int(4)  // Número de correos electrónicos asociados
+  activo boolean [default: true]  // Estado de actividad del contacto
+  contacto_auto boolean [default: false] // Control para cuando el contacto es creado automáticamente
+  id_sucursal int [ref: > empresas_sucursales.id]  // Relación con la tabla de sucursales
+  sucursal varchar(255)  // Nombre de la sucursal del contacto
+  email varchar(255)  // Correo electrónico principal del contacto
+  informe_encuesta varchar(5) [default: 'false']  // Indica si se le reenvía la encuesta automática
 }
 
 table terceros_contactos_email {
@@ -399,6 +412,7 @@ table terceros_direcciones {
 }table contactos_telefonos {
     id int [pk, increment]
     tercero_id int [ref: > terceros.id]
+    terceros_contacto_id int [ref: > terceros_contactos.id]
     tipo_telefono enum('fijo', 'celular', 'fax')
     numero varchar(25)
     es_principal boolean
