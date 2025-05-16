@@ -266,10 +266,7 @@ table terceros_contactos {
   nombre varchar(255)  // Nombre del contacto
   cargo varchar(255)  // Cargo del contacto
   direccion varchar(255)  // Dirección física del contacto
-  telefono1 varchar(25)  // Teléfono principal del contacto
-  telefono2 varchar(25)  // Teléfono secundario del contacto
-  celular1 varchar(25)  // Número de celular principal
-  celular2 varchar(25)  // Número de celular secundario
+ //los telefonos se relacionan en contacto
   nacimiento varchar(255)  // Fecha de nacimiento del contacto
   observaciones blob  // Observaciones generales sobre el contacto
   sexo varchar(255)  // Sexo del contacto
@@ -455,7 +452,7 @@ table terceros {
     contactos int(11)
     nombre_establecimiento varchar(255)
     representante_legal varchar(255)
-     id_tipo_identificacion_representante int [ref: > tipos_identificacion.id]
+    id_tipo_identificacion_representante int [ref: > tipos_identificacion.id]
     //se extrae del id informacion para tipo_identificacion_representante
     identificacion_representante varchar(255)
     ciudad_id_representante varchar(255)
@@ -491,22 +488,8 @@ table terceros {
     actividad varchar(255) [not null]
     tipo_cliente varchar(2) // es un si o un no que radica en si es cliente 
     tipo_proveedor varchar(2)// es un si que radica si es proveedor 
-    asisteH int(11) [default: 0]
-    asisteH_ varchar(2) [default: 'NO']
-    asisteS int(11) [default: 0]
-    asisteS_ varchar(2) [default: 'NO']
-    survey int(1)
-    survey_ varchar(2)
-    hotels int(1)
-    hotels_ varchar(2)
-    contler int(1)
-    contler_ varchar(2)
-    erp_facse int(1)
-    erp_facse_ varchar(2)
-    hunty int(1)
-    hunty_ varchar(2)
-    otros int(1)
-    otro_soft varchar(250)
+    // se elimina por ser una duplicacion hecha para un trigger se conserva el booleano asisteH int(11) [default: 0]
+    //se eliminan todos los softwares proque nadie los usa
     encuesta varchar(5) [default: 'false']
     encuesta_destinatario varchar(255)
     encuesta_email varchar(255)
