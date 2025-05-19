@@ -407,6 +407,13 @@ table terceros_direcciones {
 
 }
 
+table tipos_cliente_comercial {
+  id TINYINT [pk] 
+  nombre varchar(50) [not null, unique]
+  descripcion varchar(255)
+  activo boolean [default: true]
+}
+
 // Tabla de Terceros
 //  fechas son nuevas, muy buena practica  aunque ya hay otros campos de creacion fecha lo que seria interesante analizar si es diferente
 //ocr en el software que extraiga todos esos cammpos
@@ -416,8 +423,8 @@ table terceros {
     //tipo_identificacion se borra ya que se rescata del id tipo_identificacion
     dv varchar(255)
     //tipo se borra ya que se rescata del id tipo_identificacion
-    id_tipo_cliente_comercial tinyint(4) [default: 1]
-    tipo_cliente_comercial varchar(255)
+    id_tipo_cliente_comercial TINYINT [ref: > tipos_cliente_comercial.id, default: 1]
+    //se borra tipo_cliente_comercial varchar(255) porque existe una relacion que maneja esto aunque se debe manejar una limpieza exhaustiva con datos que no concuerdan 
     id_linea_negocio int(11)
     ciudad_identificacion varchar(255)
     numero_identificacion varchar(255) [not null]
@@ -477,7 +484,7 @@ table terceros {
     proyecto varchar(255)
     id_actividad int(11)
     actividad varchar(255) [not null]
-    tipo_cliente varchar(2) // es un si o un no que radica en si es cliente 
+    tipo_cliente varchar(2) // es un si o un no que radica en si es cliente por lop que es redundante con el campo que ya hace esto 
     tipo_proveedor varchar(2)// es un si que radica si es proveedor 
     // se elimina por ser una duplicacion hecha para un trigger se conserva el booleano asisteH int(11) [default: 0]
     //se eliminan todos los softwares proque nadie los usa
