@@ -259,10 +259,8 @@ table terceros_contactos {
   id int [pk, increment]  // Identificador único de cada contacto
   id_tercero int [ref: > terceros.id]  // Relación con la tabla `terceros`
   id_tipo_identificacion int [ref: > tipos_identificacion.id]  // Relación con la tabla `tipos_identificacion`
-  tipo_identificacion varchar(255)  // Tipo de identificación (se puede extraer de `id_tipo_identificacion`)
   identificacion varchar(255) [not null]  // Número de identificación del contacto
   id_tratamiento int [ref: > terceros_tratamiento.id]  // Relación con la tabla de tratamientos
-  tratamiento varchar(255)  // Descripción del tratamiento del contacto
   nombre varchar(255)  // Nombre del contacto
   cargo varchar(255)  // Cargo del contacto
   direccion varchar(255)  // Dirección física del contacto
@@ -277,7 +275,6 @@ table terceros_contactos {
   activo boolean [default: true]  // Estado de actividad del contacto
   contacto_auto boolean [default: false] // Control para cuando el contacto es creado automáticamente
   id_sucursal int [ref: > empresas_sucursales.id]  // Relación con la tabla de sucursales
-  sucursal varchar(255)  // Nombre de la sucursal del contacto
   email varchar(255)  // Correo electrónico principal del contacto
   informe_encuesta varchar(5) [default: 'false']  // Indica si se le reenvía la encuesta automática
 }
