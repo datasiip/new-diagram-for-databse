@@ -267,6 +267,9 @@ table terceros_contactos {
   cargo varchar(255)  // Cargo del contacto
   direccion varchar(255)  // Dirección física del contacto
  //los telefonos se relacionan en contacto
+  tipo_telefono enum('fijo', 'celular', 'fax')
+  numero varchar(25)
+  es_principal boolean //manejara para la logica de los que actualmente aparece en la tabla terceros
   nacimiento varchar(255)  // Fecha de nacimiento del contacto
   observaciones blob  // Observaciones generales sobre el contacto
   sexo varchar(255)  // Sexo del contacto
@@ -405,15 +408,6 @@ table terceros_direcciones {
   
   envio_formato_ac varchar(5) [default: 'true', note: 'Formato de adiciones y cancelaciones']
 
-
-}table contactos_telefonos {
-    id int [pk, increment]
-    tercero_id int [ref: > terceros.id]
-    terceros_contacto_id int [ref: > terceros_contactos.id]
-    tipo_telefono enum('fijo', 'celular', 'fax')
-    numero varchar(25)
-    es_principal boolean
-    descripcion varchar(100)
 }
 
 // Tabla de Terceros
