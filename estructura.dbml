@@ -256,29 +256,45 @@ table terceros_bloqueos_log {
 }
 
 table terceros_contactos {
-  id int [pk, increment]  // Identificador único de cada contacto
+  id int [pk, increment]
   id_tercero int [ref: > terceros.id]  // Relación con la tabla `terceros`
-  id_tipo_identificacion int [ref: > tipos_identificacion.id]  // Relación con la tabla `tipos_identificacion`
-  identificacion varchar(255) [not null]  // Número de identificación del contacto
-  id_tratamiento int [ref: > terceros_tratamiento.id]  // Relación con la tabla de tratamientos
-  nombre varchar(255)  // Nombre del contacto
-  cargo varchar(255)  // Cargo del contacto
-  direccion varchar(255)  // Dirección física del contacto
- //los telefonos se relacionan en contacto
-  tipo_telefono enum('fijo', 'celular', 'fax')
-  numero varchar(25)
-  es_principal boolean //manejara para la logica de los que actualmente aparece en la tabla terceros
-  nacimiento varchar(255)  // Fecha de nacimiento del contacto
-  observaciones blob  // Observaciones generales sobre el contacto
-  sexo varchar(255)  // Sexo del contacto
-  emails int(4)  // Número de correos electrónicos asociados
-  activo boolean [default: true]  // Estado de actividad del contacto
-  contacto_auto boolean [default: false] // Control para cuando el contacto es creado automáticamente
-  id_sucursal int [ref: > empresas_sucursales.id]  // Relación con la tabla de sucursales
-  email varchar(255)  // Correo electrónico principal del contacto
-  informe_encuesta varchar(5) [default: 'false']  // Indica si se le reenvía la encuesta automática
+  id_tipo_identificacion int [ref: > tipos_identificacion.id]
+  identificacion varchar(50) [not null]
+  id_tratamiento int [ref: > terceros_tratamiento.id]
+  nombre varchar(100) [not null]  // Primer nombre
+  segundo_nombre varchar(100)     // Segundo nombre
+  apellido varchar(100)           // Primer apellido
+  segundo_apellido varchar(100)   // Segundo apellido
+  cargo varchar(100)
+  direccion varchar(255)
+  nacimiento date
+  observaciones text  // Cambiado de blob a text
+  sexo ENUM('M', 'F', 'Otro')  // Mejor como enum que como varchar
+  activo boolean [default: true]
+  contacto_auto boolean [default: false]
+  id_sucursal int [ref: > empresas_sucursales.id]
+  email_principal varchar(255)  // Email principal (por conveniencia)
+  informe_encuesta boolean [default: false]  // Cambiado a boolean
+  
+  indexes {
+    (id_tercero, identificacion) [unique]
+  }
 }
 
+table terceros_contactos_telefonos {
+  id int [pk, increment]
+  id_contacto int [ref: > terceros_contactos.id] 
+  tipo_telefono ENUM('fijo', 'celular', 'fax', 'whatsapp', 'otro') [not null]
+  numero varchar(25) [not null]
+  extension varchar(10)  // Para extensiones de oficina
+  es_principal boolean [default: false]
+  descripcion varchar(100)  // Para notas como "Solo en horario laboral", etc.
+  activo boolean [default: true]
+  
+  indexes {
+    (id_contacto, numero) [unique]  // Evitar duplicados
+  }
+}
 table terceros_contactos_email {
   id int [pk, increment]
   id_contacto int [ref: > terceros_contactos.id]
@@ -407,9 +423,10 @@ table terceros_direcciones {
 
 }
 
+//table terceros_tipo_cliente
 table tipos_cliente_comercial {
   id TINYINT [pk] 
-  nombre varchar(50) [not null, unique]
+  nombre varchar(50) [not null, unique] //Deberia manejar prospecto tambien y cambiar el formulario
   descripcion varchar(255)
   activo boolean [default: true]
 }
@@ -618,3 +635,5 @@ table configuracion_documentos {
 }
 
 Ref: "pais"."prefijo" < "pais"."iso2"
+
+Ref: "terceros"."id" < "terceros"."id_ciudad"
