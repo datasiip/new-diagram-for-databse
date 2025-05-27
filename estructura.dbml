@@ -275,7 +275,7 @@ table terceros_contactos {
   id_sucursal int [ref: > empresas_sucursales.id]
   email_principal varchar(255)  // Email principal (por conveniencia)
   informe_encuesta boolean [default: false]  // Cambiado a boolean
-  
+  es_principal boolean [default: false]
   indexes {
     (id_tercero, identificacion) [unique]
   }
@@ -287,7 +287,6 @@ table terceros_contactos_telefonos {
   tipo_telefono ENUM('fijo', 'celular', 'fax', 'whatsapp', 'otro') [not null]
   numero varchar(25) [not null]
   extension varchar(10)  // Para extensiones de oficina
-  es_principal boolean [default: false]
   descripcion varchar(100)  // Para notas como "Solo en horario laboral", etc.
   activo boolean [default: true]
   
@@ -354,18 +353,12 @@ table terceros_tipo_documento_confidencial {
 }
 table terceros_tratamiento {
   id int [pk, increment]
-  nombre varchar(255)
+  nombre varchar(20) //sr. sra, srta. Dr, Dra, Lic, Ing
   activo boolean [default: true]
 }
 
-
-table terceros_direcciones_email {
-  id int [pk, increment]
-  id_direccion int [ref: > terceros_direcciones.id]
-  email varchar(255)
-  activo boolean [default: true]
-}
-
+// se borra la tabla direcciones email porque no se sabe muy bien si habia una relacion directa con las direcciones fisicas 
+//o simplemente era redundante de contactos email 
 // Tabla de Zonas Comerciales de Terceros
 table terceros_zona_comercial {
     id int [pk, increment]
@@ -426,7 +419,14 @@ table terceros_direcciones {
 //table terceros_tipo_cliente
 table tipos_cliente_comercial {
   id TINYINT [pk] 
-  nombre varchar(50) [not null, unique] //Deberia manejar prospecto tambien y cambiar el formulario
+  nombre varchar(50) [not null, unique, note: '''
+ 1|Corporativo         
+ 2|Centros de Convencio
+ 3|Clubes              
+ 4|Division Hoteles    
+ 5|Unidad Independiente
+ 7|No Aplica           
+  '''] //Deberia manejar prospecto tambien y cambiar el formulario
   descripcion varchar(255)
   activo boolean [default: true]
 }
@@ -454,9 +454,9 @@ table terceros {
     fechaFinalContrato date
     direccion varchar(255)
     //se borraron el fax, los 2 telefonos y los 2 celulares porque los va a menajar la tabla contactos 
-    email varchar(255)
+    //se borra la de email ya que en caso de tener email la tabla que maneja email se consultaria
     id_pais int [ref: > pais.id] // Relación con la tabla de países
-    pais varchar(255)
+    //lo trae del id del pais
     iso2 varchar(3)
     id_departamento int(11) [ref: > ubicacion_departamento.id]
     //el departamento se referencia del id departamento 
@@ -482,10 +482,10 @@ table terceros {
     ciudad_notaria varchar(255)
     fecha_creacion date
     id_sector_empresarial int(11)
-    sector_empresarial varchar(255)
+//se extrae del id entonces se borra sector_empresarial
     pagina_web varchar(255)
-    id_configuracion_origen int(11)
-    configuracion_origen varchar(255)
+    id_configuracion_origen int(11)//lod e abajo miente
+    //se borra configuracion_origen varchar(255) porque se extrae del id (actualmente no se esta usando y deberia halarse toda la data ya existente a esa tabla )
     UserIdLog int(11)
     id_tercero_tributario int(11)
     id_tipo_persona_dian tinyint(1)
@@ -513,10 +513,7 @@ table terceros {
     zona_comercial int(11)
     nombre_zona_comercial varchar(255)
     sinc_erp varchar(255) [default: 'false']
-    nombre1 varchar(255)
-    nombre2 varchar(255)
-    apellido1 varchar(255)
-    apellido2 varchar(255)
+//nombres y apellidos se guardan en la tabla contactos
     tercero int(11) [not null,default: '1']
     activo int(11) [default: 1]
     ficha_tecnica varchar(10) [default: 'false']
