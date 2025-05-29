@@ -301,6 +301,7 @@ table terceros_contactos_email {
   activo boolean [default: true]
 }
 
+//---configuracion proyectos se elimina 
 
 table terceros_ficha_tecnica {
   id int [pk, increment]
@@ -398,7 +399,7 @@ table terceros_direcciones {
     encuesta_celular varchar(255)
     id_tipo_cliente_comercial tinyint(2) [default: 1]
     tipo_cliente_comercial varchar(255)
-    zona_comercial int(255)
+    zona_comercial int(255) 
     id_pais int [ref: > pais.id] // Relación con la tabla de países
 
     emails int(4)
@@ -459,15 +460,14 @@ table terceros {
     nombre_comercial varchar(255)
     cadena_hotelera varchar(250)
     cliente_activo bool(1) //era un int pero debe ser un booleano 
-    cliente_activo_ varchar(2)
+//Se borra el otro cliente activo proque soloe ra una transformacion a si
     fechaInicioContrato date
     fechaFinalContrato date
     direccion varchar(255)
     //se borraron el fax, los 2 telefonos y los 2 celulares porque los va a menajar la tabla contactos 
     //se borra la de email ya que en caso de tener email la tabla que maneja email se consultaria
     id_pais int [ref: > pais.id] // Relación con la tabla de países
-    //lo trae del id del pais
-    iso2 varchar(3)
+    //el pais y el iso2 lo trae del id del pais
     id_departamento int(11) [ref: > ubicacion_departamento.id]
     //el departamento se referencia del id departamento 
     id_ciudad int(11) [ref: > ubicacion_ciudad.id]
@@ -506,7 +506,7 @@ table terceros {
     retener_iva varchar(10)
     agente_retenedor varchar(10)
     clasificacion varchar(1) [default: 'D']
-//se elimina id proyecto y proyecto ya que o estan en null o vacios
+//se elimina id proyecto y proyecto ya que o estan en null o vacios y el id que deberia apuntar a otra tabla es como medio redundante con otras 
     id_actividad int(11)
     actividad varchar(255) [not null]
     tipo_cliente varchar(2) // es un si o un no que radica en si es cliente por lop que es redundante con el campo que ya hace esto 
@@ -518,8 +518,8 @@ table terceros {
     encuesta_email varchar(255)
     encuesta_celular varchar(255)
     encuesta_telefono varchar(255)
-    zona_comercial int(11)
-    nombre_zona_comercial varchar(255)
+    id_zona_comercial int(11) [ref: < terceros_zona_comercial.id] //se pasa a llamarse id para ser mas descriptivo
+    //se extrae de id zona comercial 
     sinc_erp varchar(255) [default: 'false']
 //nombres y apellidos se guardan en la tabla contactos
     tercero int(11) [not null,default: '1']
