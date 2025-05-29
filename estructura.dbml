@@ -416,6 +416,14 @@ table terceros_direcciones {
 
 }
 
+//se cambia el nombre de configuracion ya que sirve para mas
+Table sector_empresarial {
+  id int [pk, increment]
+  nombre varchar(255) [not null]
+  activo int [not null, default: 1]
+}
+
+
 //table terceros_tipo_cliente
 table tipos_cliente_comercial {
   id TINYINT [pk] 
@@ -431,6 +439,8 @@ table tipos_cliente_comercial {
   activo boolean [default: true]
 }
 
+//---- se borra configuracion origen 
+
 // Tabla de Terceros
 //  fechas son nuevas, muy buena practica  aunque ya hay otros campos de creacion fecha lo que seria interesante analizar si es diferente
 //ocr en el software que extraiga todos esos cammpos
@@ -438,7 +448,7 @@ table terceros {
     id int [pk, increment]
      id_tipo_identificacion int [ref: > tipos_identificacion.id]
     //tipo_identificacion se borra ya que se rescata del id tipo_identificacion
-    dv varchar(255)
+    dv varchar(2) // se cambia el tamaño ya que es solo un digito de verificacion
     //tipo se borra ya que se rescata del id tipo_identificacion
     id_tipo_cliente_comercial TINYINT [ref: > tipos_cliente_comercial.id, default: 1]
     //se borra tipo_cliente_comercial varchar(255) porque existe una relacion que maneja esto aunque se debe manejar una limpieza exhaustiva con datos que no concuerdan 
@@ -481,11 +491,10 @@ table terceros {
     notaria_escritura varchar(255)
     ciudad_notaria varchar(255)
     fecha_creacion date
-    id_sector_empresarial int(11)
+    id_sector_empresarial int [ref: > sector_empresarial.id]
 //se extrae del id entonces se borra sector_empresarial
     pagina_web varchar(255)
-    id_configuracion_origen int(11)//lod e abajo miente
-    //se borra configuracion_origen varchar(255) porque se extrae del id (actualmente no se esta usando y deberia halarse toda la data ya existente a esa tabla )
+    //se borra configuracion_origen y el di ya que solo se habian llenado unas contadas veces se borra una tabla relacionada que no tenia relacion
     UserIdLog int(11)
     id_tercero_tributario int(11)
     id_tipo_persona_dian tinyint(1)
@@ -497,8 +506,7 @@ table terceros {
     retener_iva varchar(10)
     agente_retenedor varchar(10)
     clasificacion varchar(1) [default: 'D']
-    id_proyecto int(11)
-    proyecto varchar(255)
+//se elimina id proyecto y proyecto ya que o estan en null o vacios
     id_actividad int(11)
     actividad varchar(255) [not null]
     tipo_cliente varchar(2) // es un si o un no que radica en si es cliente por lop que es redundante con el campo que ya hace esto 
@@ -524,7 +532,7 @@ table terceros {
     proveedor_subcontratacion varchar(5) [default: 'No']
     correo_subcontratacion varchar(255)
     id_origen_contacto int(11)
-    origen_contacto varchar(255)
+    //se elimina origen contacto que se deberia extraer de origen_contacto_terceros
     descripcion_contacto varchar(255)
     tipo_operacion tinyint(4) [default: 0]
     observacion_servicios varchar(255)
@@ -621,7 +629,7 @@ table configuracion_documentos_tipo {
 table configuracion_documentos {
   id int [pk, increment]
   nombre varchar(255)
-                                                                                                          id_tipo int [ref: > configuracion_documentos_tipo.id]
+  id_tipo int [ref: > configuracion_documentos_tipo.id]
   //se elimina tipo ya que lo trae id_tipo 
   texto longblob
   texto2 longblob
