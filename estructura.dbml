@@ -523,7 +523,7 @@ table terceros {
     sinc_erp varchar(255) [default: 'false']
 //nombres y apellidos se guardan en la tabla contactos
     tercero int(11) [not null,default: '1']
-    activo int(11) [default: 1]
+    activo BOOLEAN [default: true] //se cambia tipo de dato 
     ficha_tecnica varchar(10) [default: 'false']
     tarifario varchar(10) [default: 'false']
     usuario_log int(11)
@@ -614,7 +614,7 @@ table configuracion_horas_extras {
     salario_base float(11, 2)
     inicia_diurno time [default: '06:00:00']
     inicia_nocturno time [default: '22:00:00']
-    activo int(11) [default: '1']
+    activo boolean [default: true]
 }
 
 // Tabla de tipos de documentos de configuración
